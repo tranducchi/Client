@@ -4,23 +4,33 @@
  * and open the template in the editor.
  */
 package multi.thread;
+
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
- 
+
 /**
  *
  * @author Admin
  */
 public class Form extends javax.swing.JFrame {
+
+    static Socket s;
+    static int port;
 
     /**
      * Creates new form Form
@@ -47,12 +57,17 @@ public class Form extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txtPort = new javax.swing.JTextField();
+        iPort = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnConnect = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtInput = new javax.swing.JTextArea();
+        btnSend = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtHistory = new javax.swing.JTextArea();
+        jLabel8 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -106,40 +121,32 @@ public class Form extends javax.swing.JFrame {
         jTabbedPane1.addTab("Home", jPanel1);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel4.setText("Dashboard Server");
+        jLabel4.setText("Connection to Server");
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multi/thread/server.png"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multi/thread/client.png"))); // NOI18N
 
-        txtPort.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        txtPort.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        txtPort.addActionListener(new java.awt.event.ActionListener() {
+        iPort.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        iPort.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        iPort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPortActionPerformed(evt);
+                iPortActionPerformed(evt);
             }
         });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Port : ");
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton2.setText("Distroy");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnConnect.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnConnect.setForeground(new java.awt.Color(204, 0, 255));
+        btnConnect.setText("Connect");
+        btnConnect.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                btnConnectMouseClicked(evt);
             }
         });
-
-        jButton3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(204, 0, 255));
-        jButton3.setText("Create");
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
-            }
-        });
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnConnectActionPerformed(evt);
             }
         });
 
@@ -148,66 +155,107 @@ public class Form extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(367, Short.MAX_VALUE)
+                .addContainerGap(560, Short.MAX_VALUE)
                 .addComponent(jLabel6)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jLabel4)
-                .addGap(276, 276, 276))
+                .addGap(253, 253, 253))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(311, 311, 311)
                 .addComponent(jLabel5)
                 .addGap(32, 32, 32)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtPort)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
+                    .addComponent(iPort)
+                    .addComponent(btnConnect, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iPort, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(57, 57, 57)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(89, 89, 89))
+                .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(165, 165, 165))
         );
 
-        jTabbedPane1.addTab("Create Server", jPanel3);
+        jTabbedPane1.addTab("Connect to Server", jPanel3);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel7.setText("Chat Online");
+
+        txtInput.setColumns(20);
+        txtInput.setRows(5);
+        jScrollPane1.setViewportView(txtInput);
+
+        btnSend.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnSend.setText("Send");
+        btnSend.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSendMouseClicked(evt);
+            }
+        });
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
+
+        txtHistory.setEditable(false);
+        txtHistory.setColumns(20);
+        txtHistory.setRows(5);
+        jScrollPane3.setViewportView(txtHistory);
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multi/thread/user.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 995, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(422, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 721, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(130, 130, 130))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addGap(407, 407, 407))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 572, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)))
+                .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Chat to clients", jPanel4);
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 995, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 572, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Status Chat", jPanel5);
+        jTabbedPane1.addTab("Chat to Server", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -227,44 +275,96 @@ public class Form extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPortActionPerformed
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPortActionPerformed
+    }//GEN-LAST:event_btnSendActionPerformed
 
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+    private void btnSendMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSendMouseClicked
         // TODO add your handling code here:
-        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-        //get Port
-        String portNumber = txtPort.getText();
-        // check null port
-        while(portNumber.isEmpty()){
-           JOptionPane.showMessageDialog(frame,"Port is not null.","Warning",JOptionPane.WARNING_MESSAGE);
-           break;
-        }
-        
-        int port = Integer.parseInt(portNumber);	
-        
-        
+        String tchat = txtInput.getText();
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            System.out.println("Create Server");
-         
-                 
+            OutputStream output = s.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println(tchat);
         } catch (IOException ex) {
             Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-    }//GEN-LAST:event_jButton3MouseClicked
+        txtHistory.append("You : " + tchat + "\n");
+        txtInput.setText("");
+        txtInput.requestFocus();
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnSendMouseClicked
+
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnConnectActionPerformed
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        System.out.println("Distroy Server");
-    
-    }//GEN-LAST:event_jButton2MouseClicked
+    private void btnConnectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConnectMouseClicked
+        // TODO add your handling code here:
+        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+        //get Port
+        String portNumber = iPort.getText();
+        // check null port
+        while (portNumber.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Port is not null.", "Warning", JOptionPane.WARNING_MESSAGE);
+            break;
+        }
+        port = Integer.parseInt(portNumber);
+        Thread thread = null;
+        try {
+            s = new Socket("127.0.0.1", port);
+            System.out.println("Connected");
+            JOptionPane.showMessageDialog(frame, "Connected", "Success", JOptionPane.INFORMATION_MESSAGE);
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    BufferedReader reader = null;
+                    try {
+                        String tc = "";
+                        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                        tc = in.readLine();
+                        while(tc !=null){
+                            
+                            System.out.println("Server : " + tc);
+                            txtHistory.append("Server : " + tc + "\n");
+                            tc = in.readLine();
+         
+                        }
+
+                        in.close();
+                        
+                        s.close(); 
+                    } catch (IOException ex) {
+                        Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            reader.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            });
+
+            thread.start();
+
+        } catch (IOException ex) {
+            thread.destroy();
+            Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(frame, "Wrong in connect", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+
+        /*  try {
+            s.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         */
+    }//GEN-LAST:event_btnConnectMouseClicked
+
+    private void iPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iPortActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_iPortActionPerformed
 
     /**
      * @param args the command line arguments
@@ -302,20 +402,25 @@ public class Form extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnConnect;
+    private javax.swing.JButton btnSend;
+    private javax.swing.JTextField iPort;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField txtPort;
+    private javax.swing.JTextArea txtHistory;
+    private javax.swing.JTextArea txtInput;
     // End of variables declaration//GEN-END:variables
 }
